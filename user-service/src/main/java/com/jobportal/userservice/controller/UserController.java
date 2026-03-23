@@ -1,8 +1,12 @@
 package com.jobportal.userservice.controller;
 
+import com.jobportal.userservice.config.JwtUtil;
+import com.jobportal.userservice.dto.ApiResponse;
 import com.jobportal.userservice.dto.UserResponse;
 import com.jobportal.userservice.entity.User;
 import com.jobportal.userservice.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,28 +17,49 @@ import com.jobportal.userservice.dto.LoginRequest;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<UserResponse>> register(@RequestBody User user) {
+
         User savedUser = userService.registerUser(user);
-        return ResponseEntity.ok(savedUser);
+
+        UserResponse response = new UserResponse();
+        response.setUserId(savedUser.getUserId());
+        response.setName(savedUser.getName());
+        response.setEmail(savedUser.getEmail());
+        response.setRole(String.valueOf(savedUser.getRole()));
+
+        return new ResponseEntity<>(
+                new ApiResponse<>(true, "User registered successfully", response),
+                HttpStatus.CREATED
+        );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<?>> login(@RequestBody LoginRequest request) {
 
         User user = userService.login(request.getEmail(), request.getPassword());
 
-        UserResponse response = new UserResponse();
-        response.setUserId(user.getUserId());
-        response.setName(user.getName());
-        response.setEmail(user.getEmail());
-        response.setRole(String.valueOf(user.getRole()));
+        String token = jwtUtil.generateToken(user.getEmail());
+//        UserResponse response = new UserResponse();
+//        response.setUserId(user.getUserId());
+//        response.setName(user.getName());
+//        response.setEmail(user.getEmail());
+//        response.setRole(String.valueOf(user.getRole()));
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Login successful", token)
+        );
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "Protected API working";
     }
 }
