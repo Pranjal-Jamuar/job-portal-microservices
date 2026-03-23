@@ -41,4 +41,20 @@ public class UserService {
 
         return user;
     }
+
+    public User getUserById(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User updateUser(String userId, User updatedUser) {
+
+        User existingUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+
+        return userRepository.save(existingUser);
+    }
 }
