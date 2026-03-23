@@ -62,4 +62,38 @@ public class UserController {
 //    public String test() {
 //        return "Protected API working";
 //    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable String userId) {
+
+        User user = userService.getUserById(userId);
+
+        UserResponse response = new UserResponse();
+        response.setUserId(user.getUserId());
+        response.setName(user.getName());
+        response.setEmail(user.getEmail());
+        response.setRole(String.valueOf(user.getRole()));
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "User fetched successfully", response)
+        );
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @PathVariable String userId,
+            @RequestBody User user) {
+
+        User updated = userService.updateUser(userId, user);
+
+        UserResponse response = new UserResponse();
+        response.setUserId(updated.getUserId());
+        response.setName(updated.getName());
+        response.setEmail(updated.getEmail());
+        response.setRole(String.valueOf(updated.getRole()));
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "User updated successfully", response)
+        );
+    }
 }
