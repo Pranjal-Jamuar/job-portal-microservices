@@ -1,5 +1,6 @@
 package com.jobportal.jobservice.controller;
 
+import com.jobportal.jobservice.dto.ApiResponse;
 import com.jobportal.jobservice.entity.Job;
 import com.jobportal.jobservice.service.JobService;
 import org.springframework.http.ResponseEntity;
@@ -19,27 +20,38 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createJob(@RequestBody Job job) {
+    public ResponseEntity<ApiResponse<Job>> createJob(@RequestBody Job job) {
         Job saved = jobService.createJob(job);
 
-        return ResponseEntity.ok(Map.of(
-                "jobId", saved.getJobId(),
-                "message", "Job created"
-        ));
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Job created", saved)
+        );
     }
 
     @GetMapping("/{jobId}")
-    public Job getJob(@PathVariable String jobId) {
-        return jobService.getJob(jobId);
+    public ResponseEntity<ApiResponse<Job>> getJob(@PathVariable String jobId) {
+        Job job = jobService.getJob(jobId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Job fetched", job)
+        );
     }
 
     @GetMapping
-    public List<Job> getAllJobs() {
-        return jobService.getAllJobs();
+    public ResponseEntity<ApiResponse<List<Job>>> getAllJobs() {
+        List<Job> jobs = jobService.getAllJobs();
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "All jobs fetched", jobs)
+        );
     }
 
     @PutMapping("/{jobId}/close")
-    public Job closeJob(@PathVariable String jobId) {
-        return jobService.closeJob(jobId);
+    public ResponseEntity<ApiResponse<Job>> closeJob(@PathVariable String jobId) {
+        Job job = jobService.closeJob(jobId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Job closed", job)
+        );
     }
 }
