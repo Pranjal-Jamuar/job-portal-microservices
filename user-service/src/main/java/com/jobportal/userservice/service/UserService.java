@@ -18,7 +18,8 @@ public class UserService {
     public User registerUser(User user) {
 
         // Generate unique userId
-        user.setUserId("U" + UUID.randomUUID().toString().substring(0, 5));
+        long count = userRepository.count() + 1;
+        user.setUserId("U" + (100 + count));
 
         return userRepository.save(user);
     }
