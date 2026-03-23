@@ -58,8 +58,8 @@ public class UserController {
         );
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "Protected API working";
-    }
+//    @GetMapping("/test")
+//    public String test() {
+//        return "Protected API working";
+//    }
 }
