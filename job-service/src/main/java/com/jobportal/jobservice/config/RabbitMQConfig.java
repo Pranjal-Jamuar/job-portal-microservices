@@ -29,7 +29,6 @@ public class RabbitMQConfig {
         return new RabbitAdmin(connectionFactory);
     }
 
-    // ✅ NEW WAY (NOT deprecated)
     @Bean
     public MessageConverter messageConverter() {
         return new JacksonJsonMessageConverter();
