@@ -28,6 +28,14 @@ public class JwtFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+
+        String path = req.getServletPath();
+
+        if (path.startsWith("/api/users/login") || path.startsWith("/api/users/register")) {
+            chain.doFilter(request, response);
+            return;
+        }
         String authHeader = req.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
