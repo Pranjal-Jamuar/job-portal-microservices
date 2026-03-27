@@ -32,7 +32,9 @@ public class JwtFilter implements Filter {
 
         String path = req.getServletPath();
 
-        if (path.startsWith("/api/users/login") || path.startsWith("/api/users/register")) {
+        if (path.startsWith("/api/users/login") || path.startsWith("/api/users/register") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/swagger-ui")) {
             chain.doFilter(request, response);
             return;
         }
