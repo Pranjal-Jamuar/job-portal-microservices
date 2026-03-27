@@ -125,10 +125,10 @@ To ensure the system initializes correctly, start the services in this specific 
 - [x] Event-driven communication with RabbitMQ
 - [x] Centralized Swagger API Documentation
 
-'## 🚧 Work in Progress
-- [ ] **RBAC:** Implementation of Role-Based Access Control.
-- [ ] **Distributed Tracing:** Adding Zipkin/Sleuth for request tracking.
-- [ ] **Dockerization:** Creating a `docker-compose.yml` for the entire stack.'
+[//]: # (## 🚧 Work in Progress)
+[//]: # (- [ ] **RBAC:** Implementation of Role-Based Access Control.)
+[//]: # (- [ ] **Distributed Tracing:** Adding Zipkin/Sleuth for request tracking.)
+[//]: # (- [ ] **Dockerization:** Creating a docker-compose.yml for the entire stack.)
 
 ---
 
