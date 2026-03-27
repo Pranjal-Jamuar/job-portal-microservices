@@ -5,12 +5,15 @@ import com.jobportal.userservice.dto.ApiResponse;
 import com.jobportal.userservice.dto.UserResponse;
 import com.jobportal.userservice.entity.User;
 import com.jobportal.userservice.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.jobportal.userservice.dto.LoginRequest;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -46,15 +49,18 @@ public class UserController {
 
         User user = userService.login(request.getEmail(), request.getPassword());
 
-        String token = jwtUtil.generateToken(user.getEmail());
-//        UserResponse response = new UserResponse();
-//        response.setUserId(user.getUserId());
-//        response.setName(user.getName());
-//        response.setEmail(user.getEmail());
-//        response.setRole(String.valueOf(user.getRole()));
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                user.getRole().name()
+        );
+
+        // ✅ structured response
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        response.put("role", user.getRole().name());
 
         return ResponseEntity.ok(
-                new ApiResponse<>(true, "Login successful", token)
+                new ApiResponse<>(true, "Login successful", response)
         );
     }
 
@@ -94,6 +100,25 @@ public class UserController {
 
         return ResponseEntity.ok(
                 new ApiResponse<>(true, "User updated successfully", response)
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
+        List<UserResponse> users = userService.getAllUsers()
+                .stream()
+                .map(user -> {
+                    UserResponse res = new UserResponse();
+                    res.setUserId(user.getUserId());
+                    res.setName(user.getName());
+                    res.setEmail(user.getEmail());
+                    res.setRole(user.getRole().name());
+                    return res;
+                })
+                .toList();
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, "Users fetched", users)
         );
     }
 }
