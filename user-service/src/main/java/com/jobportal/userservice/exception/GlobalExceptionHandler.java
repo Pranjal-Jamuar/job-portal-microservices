@@ -24,13 +24,13 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleGeneric(Exception ex) {
-        return new ResponseEntity<>(
-                new ApiResponse<>(false, "Something went wrong", null),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ApiResponse<?>> handleGeneric(Exception ex) {
+//        return new ResponseEntity<>(
+//                new ApiResponse<>(false, "Something went wrong", null),
+//                HttpStatus.INTERNAL_SERVER_ERROR
+//        );
+//    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ApiResponse<?>> handleRuntime(RuntimeException ex) {
